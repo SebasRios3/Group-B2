@@ -1,0 +1,39 @@
+Code: 
+Integer token
+Function main
+	Tool 0
+	Go start
+	For token = 0 To 5
+		picksquare()
+		stacksquare()
+		picktoken()
+		stacktoken()
+	Next token
+	Go start
+Fend
+Function picksquare
+	Go pick2 +Z(30) /1
+	Go pick2 -Z(token * 6) /1
+	On 8
+	Wait 0.5
+	Go pick2 +Z(30) /1
+Fend
+Function stacksquare
+	Go place1 +Z(token * 12 + 30) /1
+	Go place1 +Z(token * 12 - 1) /1
+	Off 8
+	Go place1 +Z(token * 12 + 30) /1
+Fend
+Function picktoken
+	Go pick1 +Z(30) /1
+	Go pick1 -Z(token * 6) /1
+	On 8
+	Wait 0.5
+	Go pick1 +Z(30) /1
+Fend
+Function stacktoken
+	Go place1 +Z(token * 12 + 35) /1
+	Go place1 +Z(token * 12 + 4) /1
+	Off 8
+	Go place1 +Z(token * 12 + 35) /1
+Fend
