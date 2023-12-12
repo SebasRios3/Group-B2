@@ -1,0 +1,78 @@
+Integer circle
+Integer square
+Function main
+	Motor On
+	Speed 100
+	Accel 100, 100
+	SpeedS 1000
+	AccelS 10000
+Tool 1
+Go start /1
+		For circle = 0 To 2
+			pickcircle()
+			allignmentcircle()
+			placecircle()
+		Next circle
+		For square = 0 To 2
+			picksquare()
+			allignmentsquare()
+			placesquare()
+		Next square
+				
+Go start /1
+Fend
+Function pickcircle()
+	Go pick1 -Z(35) /1
+	Go pick1 +Z(circle * 6) /1
+	On 8
+	Wait 0.5
+	Go pick1 -Z(35) -Y(2) /1
+Fend
+Function allignmentcircle()
+	Go allignment1 -Z(30) -Y(5) /1
+	Go allignment1 -Y(5) /1
+	Go allignment1 +Y(2) /1
+	Off 8
+	Wait 0.5
+	Go allignment1 -Z(10) /1
+	Go allignment1 /1
+	Wait 0.5
+	On 8
+	Go allignment1 -Z(25) /1
+Fend
+Function placecircle()
+	Go tray1 -Z(25) +X(circle * 30) /1
+	Go tray1 +X(circle * 30) /1
+	Wait 0.5
+	Off 8
+	Wait 1
+	Go tray1 -Z(35) +X(circle * 30) /1
+Fend
+Function picksquare()
+	Go pick2 -Z(30) /1
+	Go pick2 +Z(square * 6) /1
+	On 8
+	Wait 0.5
+	Go pick2 -Z(40) +X(5) -Y(5) /1
+Fend
+Function allignmentsquare()
+	Go allignment2 -Z(35) +X(2) -Y(5) /1
+	Go allignment2 +X(2) -Y(5) /1
+	Go allignment2 -Y(5) /1
+	Go allignment2 -X(2) +Y(2) /1
+	Off 8
+	Wait 0.5
+	Go allignment2 -Z(10) /1
+	Go allignment2 /1
+	Wait 0.5
+	On 8
+	Go allignment2 -Z(35) /1
+Fend
+Function placesquare()
+	Go tray2 -Z(35) +X(square * 30) /1
+	Go tray2 +X(square * 30) /1
+	Wait 0.5
+	Off 8
+	Wait 1
+	Go tray2 -Z(35) +X(square * 30) /1
+Fend
