@@ -1,0 +1,371 @@
+Integer x
+Integer circleheight
+Integer squareheight, square, circle
+Integer circlenumber
+Integer squarenumber
+Integer circle1(3)
+Integer square1(3)
+Integer hola
+Function IO
+
+begin:
+Off 8
+hola = 0
+Motor On
+Speed 30
+Accel 30, 30
+SpeedS 500
+AccelS 5000
+Tool 1
+
+Go start2 /2
+
+Wait Sw(0) = Off 'check'
+
+Wait Sw(2) = On 'check'
+Xqt check
+Do While Sw(7) = Off And Sw(0) = Off
+	If Sw(4) = On Then
+    	Halt check
+  	Else
+		Resume check
+  	EndIf
+Loop
+Quit check
+If Sw(7) = On Or Sw(0) = Off Then
+GoTo begin
+EndIf
+Go start2 /2
+Wait Sw(0) = On
+Xqt task3
+Do While Sw(0) = On And Sw(7) = Off And Sw(1) = Off 'stop'
+	If Sw(4) = On Then
+		Halt task3
+		Else
+			Resume task3
+	EndIf
+
+Loop
+Quit task3
+Go start2 /2
+If Sw(7) = On Or Sw(0) = Off Then
+GoTo begin
+EndIf
+intermedio:
+If Sw(1) = Off Then
+	GoTo intermedio
+EndIf
+Xqt reverse
+
+Do While Sw(0) = On And Sw(7) = Off And hola = 0 'stop'
+	If Sw(4) = On Then
+		Halt reverse
+		Else
+			Resume reverse
+	EndIf
+
+Loop
+GoTo begin
+
+Fend
+Function check
+	
+	Go start2 /2
+	allcheck
+	Go start2 /2
+	
+	Fend
+Function allcheck
+	
+	circleheight = 6
+	squareheight = 6
+	Integer c
+	c = 0
+	
+	Go pick23 +Z(25) +Z(squareheight * 3) /2
+	Wait 1
+	On 8
+	Wait 1
+	
+		Do While Sw(17) = 0 '(presion '0 no hay nada 1 hay algo')' 
+			Go pick23 +Z(squareheight * 3 + 10) -Z(c) /2
+			c = c + 1
+	Loop
+	Off 8
+	squarenumber = ((squareheight * 6 + 10) - c) / squareheight
+	Print squarenumber
+	Go pick23 +Z(25) +Z(squareheight * 3) /2
+	
+
+	Go pick13 +Z(25) +Z(circleheight * 3) /2
+	On 8
+	c = 0
+		Do While Sw(17) = 0 '(presion '0 no hay nada 1 hay algo')' 
+			Go pick13 +Z(circleheight * 3 + 10) -Z(c) /2
+			c = c + 1
+	Loop
+	Off 8
+	circlenumber = ((circleheight * 6 + 10) - c) / circleheight
+	Print circlenumber
+	Go pick13 +Z(25) +Z(squareheight * 3) /2
+	
+	For x = 0 To 2
+		checktray2()
+	Next x
+	
+	For x = 0 To 2
+		checktray1()
+	Next x
+	
+Fend
+Function checktray2
+	On 8
+	Go tray23 +Z(20) +X(x * 30) -U(90) /2
+	Go tray23 -Z(4) +X(x * 30) -U(90) /2
+	Wait 1
+	square1(x) = Sw(17)
+	Off 8
+	Go tray23 +Z(35) +X(x * 30) -U(90) /2
+	Print square1(x)
+Fend
+Function checktray1
+	On 8
+	Go tray13 +Z(35) +X(x * 30) /2
+	Go tray13 -Z(4) +X(x * 30) /2
+	Wait 1
+	circle1(x) = Sw(17)
+	Off 8
+	Go tray13 +Z(30) +X(x * 30) /2
+	Print circle1(x)
+Fend
+Function task3
+square = 0
+circle = 0
+circleheight = 6
+squareheight = 6
+
+Go start2 /2
+
+	For x = 0 To circlenumber - 1
+		If circle1(0) = 0 Or circle1(1) = 0 Or circle1(2) = 0 Then
+			pickcircle3()
+			allignmentcircle3()
+			placecircle3()
+			circle = circle + 1
+			Print circle1(x)
+		EndIf
+	Next x
+	
+	For x = 0 To squarenumber - 1
+		If square1(0) = 0 Or square1(1) = 0 Or square1(2) = 0 Then
+			picksquare3()
+			allignmentsquare3()
+			placesquare3()
+			square = square + 1
+			Print square1(x)
+		EndIf
+
+		Next x
+	
+Go start2 /2
+
+Fend
+Function pickcircle3
+	Go pick13 -Z(18) +Z(circlenumber * circleheight + 45) /2 'altura desde el origen del feeder +z(18)'
+														 '-Z(blocknumber * blockhight + 25) altura q va a ir subiendo'
+	Go pick13 -Z(18) +Z(circlenumber * circleheight) -Z(x * 6) /2
+	On 8
+	Wait 0.5
+	Go pick13 -Z(18) +Z(circlenumber * circleheight + 45) /2
+Fend
+Function allignmentcircle3
+	Go allignment13 +Z(35) -X(2) /2
+	Go allignment13 -X(2) /2
+	Off 8
+	Go allignment13 +Z(35) /2
+	On 9
+	Wait 0.5
+	Off 9
+	Go allignment13
+	On 8
+	Wait 0.5
+	Go allignment13 +Z(35) /2
+Fend
+Function placecircle3
+	If circle1(0) = 0 Then
+		Go tray13 +Z(30) /2
+		Go tray13 /2
+		Off 8
+		Wait 0.5
+		Go tray13 +Z(30) /2
+		
+		circle1(0) = 1
+	Else
+		If circle1(1) = 0 Then
+			Go tray13 +Z(30) +X(30) /2
+			Go tray13 +X(30) /2
+			Off 8
+			Wait 0.5
+			Go tray13 +Z(30) +X(30) /2
+			
+			circle1(1) = 1
+		Else
+			Go tray13 +Z(30) +X(60) /2
+			Go tray13 +X(60) /2
+			Off 8
+			Wait 0.5
+			Go tray13 +Z(30) +X(60) /2
+			circle1(2) = 1
+		EndIf
+	EndIf
+	
+Fend
+Function picksquare3
+	Go pick23 -Z(18) +Z(squarenumber * squareheight) +Z(45) /2 'altura desde el origen del feeder +z(18)'
+														 '-Z(blocknumber * blockhight + 25) altura q va a ir subiendo'
+	Go pick23 -Z(18) +Z(squarenumber * squareheight) -Z(x * 6) /2
+	On 8
+	Wait 0.5
+	Go pick23 -Z(18) +Z(squarenumber * squareheight) +Z(45) +Y(5) /2
+Fend
+Function allignmentsquare3
+Go allignment23 +Z(35) -X(2) +Y(3) /2
+	Go allignment23 -X(2) +Y(3) /2
+	Off 8
+	Go allignment23 +Z(35) /2
+	On 10
+	Wait 0.5
+	Off 10
+	Go allignment23
+	On 8
+	Wait 0.5
+	Go allignment23 +Z(35) /2
+Fend
+Function placesquare3
+	If square1(0) = 0 Then
+		Go tray23 +Z(30) /2
+		Go tray23 /2
+		Off 8
+		Wait 0.5
+		Go tray23 +Z(30) /2
+		
+		square1(0) = 1
+	Else
+		If square1(1) = 0 Then
+			Go tray23 +Z(30) +X(30) /2
+			Go tray23 +X(30) /2
+			Off 8
+			Wait 0.5
+			Go tray23 +Z(30) +X(30) /2
+			square1(1) = 1
+		Else
+			Go tray23 +Z(30) +X(60) /2
+			Go tray23 +X(60) /2
+			Off 8
+			Wait 0.5
+			Go tray23 +Z(30) +X(60) /2
+			square1(2) = 1
+		EndIf
+	EndIf
+	
+Fend
+Function reverse
+Go start2 /2
+allreverse()
+Go start2 /2
+hola = 1
+Fend
+Function allreverse
+circlerev3:
+	For x = 0 To 2
+			If circle1(0) = 1 Then
+				Go tray13 +Z(35) /2
+				Go tray13 -Z(5) /2
+				On 8
+				Wait 0.5
+				Go tray13 +Z(35) /2
+				Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 65) +Y(3) /2
+				Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 6) /2
+				Off 8
+				Wait 0.5
+				Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 65) +Y(3) /2
+				circle1(0) = 0
+					Else
+						If circle1(1) = 1 Then
+							Go tray13 +Z(35) +X(30) /2
+							Go tray13 -Z(5) +X(30) /2
+							On 8
+							Wait 0.5
+							Go tray13 +Z(35) +X(30) /2
+							Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 65) +Y(3) /2
+							Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 6) +Y(3) /2
+							Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 6) /2
+							Off 8
+							Wait 0.5
+							Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 65) +Y(3) /2
+							circle1(1) = 0
+								Else
+									If circle1(2) = 1 Then
+										Go tray13 +Z(35) +X(60) /2
+										Go tray13 -Z(5) +X(60) /2
+										On 8
+										Wait 0.5
+										Go tray13 +Z(35) +X(60) /2
+										Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 65) +Y(3) /2
+										Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 6) +Y(3) /2
+										Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 6) /2
+										Off 8
+										Wait 0.5
+										Go pick13 -Z(18) +Z((circlenumber - circle + x) * circleheight + 65) +Y(3) /2
+										circle1(2) = 0
+	                                    	Else
+												If square1(0) = 1 Then
+												Go tray23 +Z(35) /2
+												Go tray23 -Z(5) /2
+												On 8
+												Wait 0.5
+												Go tray23 +Z(35) /2
+												Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 65) +Y(3) /2
+												Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 6) +Y(3) /2
+												Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 6) /2
+												Off 8
+												Wait 0.5
+												Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 65) +Y(3) /2
+												square1(0) = 0
+													Else
+														If square1(1) = 1 Then
+															Go tray23 +Z(35) +X(30) /2
+															Go tray23 -Z(5) +X(30) /2
+															On 8
+															Wait 0.5
+															Go tray23 +Z(35) +X(30) /2
+															Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 65) +Y(3) /2
+															Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 6) +Y(3) /2
+															Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 6) /2
+															Off 8
+															Wait 0.5
+															Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 65) +Y(3) /2
+															square1(1) = 0
+																Else
+																	If square1(2) = 1 Then
+																		Go tray23 +Z(35) +X(60) /2
+																		Go tray23 -Z(5) +X(60) /2
+																		On 8
+																		Wait 0.5
+																		Go tray23 +Z(35) +X(60) /2
+																		Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 65) +Y(3) /2
+																		Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 6) +Y(3) /2
+																		Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 6) /2
+																		Off 8
+																		Wait 0.5
+																		Go pick23 -Z(18) +Z((squarenumber - square + x) * squareheight + 65) +Y(3) /2
+																		square1(2) = 0
+																	EndIf
+															EndIf
+												EndIf
+									EndIf
+							EndIf
+				EndIf
+	Next x
+GoTo circlerev3
+Fend
